@@ -1,0 +1,17 @@
+#!/bin/zsh
+# run chmod 777 on this file
+
+OLD_STRING=${OLD_STRING}
+NEW_STRING=${NEW_STRING}
+
+# use silver searcher to find all matches and use -l option to print only the filenames
+# convert file names into an array so we can loop through it
+files_array=("${(@f)$(ag -l "${OLD_STRING}")}")
+
+echo "changing ${OLD_STRING} to ${NEW_STRING}"
+
+for file in $files_array
+do
+  # edit file and substitute OLD_STRING to NEW_STRING
+  sed -i '' -e "s/${OLD_STRING}/${NEW_STRING}/g" $file
+done
