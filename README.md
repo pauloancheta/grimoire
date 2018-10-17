@@ -16,6 +16,9 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [cmd + B](./iterm/cmd_+_b.md)
 * [type faster](./iterm/type_faster.md)
 
+## Linux Commands
+* [scp](./linux_commands/scp.md)
+
 ## Terminal Productivity
 - https://github.com/junegunn/fzf
 - https://github.com/sharkdp/bat
