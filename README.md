@@ -19,6 +19,9 @@ export PATH="$HOME/grimoire/bin:$PATH"
 ## Linux Commands
 * [scp](./linux_commands/scp.md)
 
+## Ruby on Rails
+* [find_each](./ruby_on_rails/find_each.md)
+
 ## Terminal Productivity
 - https://github.com/junegunn/fzf
 - https://github.com/sharkdp/bat
