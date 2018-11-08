@@ -22,6 +22,9 @@ export PATH="$HOME/grimoire/bin:$PATH"
 ## Ruby on Rails
 * [find_each](./ruby_on_rails/find_each.md)
 
+## Python
+* [open](./python/open.md)
+
 ## Terminal Productivity
 - https://github.com/junegunn/fzf
 - https://github.com/sharkdp/bat
