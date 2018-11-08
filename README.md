@@ -25,6 +25,9 @@ export PATH="$HOME/grimoire/bin:$PATH"
 ## Python
 * [open](./python/open.md)
 
+## Vim
+* [expand directory](./vim/expand_directory.md)
+
 ## Terminal Productivity
 - https://github.com/junegunn/fzf
 - https://github.com/sharkdp/bat
