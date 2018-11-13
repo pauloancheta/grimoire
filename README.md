@@ -24,6 +24,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 
 ## Python
 * [open](./python/open.md)
+* [debugger](./python/debugger.md)
 
 ## Vim
 * [expand directory](./vim/expand_directory.md)
