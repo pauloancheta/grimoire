@@ -29,6 +29,9 @@ export PATH="$HOME/grimoire/bin:$PATH"
 ## Vim
 * [expand directory](./vim/expand_directory.md)
 
+## Git
+* [patch](./git/patch.md)
+
 ## Terminal Productivity
 - https://github.com/junegunn/fzf
 - https://github.com/sharkdp/bat
