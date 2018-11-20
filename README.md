@@ -15,6 +15,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 ## ITERM / Terminal
 * [cmd + B](./iterm/cmd_+_b.md)
 * [type faster](./iterm/type_faster.md)
+* [ag hidden files](./iterm/ag_hidden_files.md)
 
 ## Linux Commands
 * [scp](./linux_commands/scp.md)
