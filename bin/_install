@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+for found in ~/.dotfiles/dotfiles/*; do
+  ln -fs $found ~/.$(basename $found)
+done

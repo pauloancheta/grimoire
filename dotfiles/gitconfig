@@ -1,0 +1,36 @@
+[user]
+	name = Paulo Ancheta
+	email = paulo.ancheta@gmail.com
+[filter "lfs"]
+	clean = git lfs clean %f
+	smudge = git lfs smudge %f
+	required = true
+
+[push]
+  default = simple
+[pull]
+  default = simple
+[branch]
+  autosetuprebase = always
+
+[alias]
+  praise = blame
+  a = add
+  ap = add -p
+  amend = commit --amend
+  b = branch
+  co = checkout
+  c = commit -v
+  cp = cherry-pick
+  d = diff
+  ds = diff --staged
+  l = log --graph --pretty --format='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold cyan)<%an>%Creset' --abbrev-commit
+  rc = rebase --continue
+  s = status --short --branch
+  poh = push origin head
+  pohf = push origin head --force-with-lease
+	wip = !git add . && git commit -m “WIP” --allow-empty
+	it = git init && git add -A && git commit -m 'Initial Commit'
+
+[credential]
+	helper = store
