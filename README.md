@@ -33,6 +33,9 @@ export PATH="$HOME/grimoire/bin:$PATH"
 ## Git
 * [patch](./git/patch.md)
 
+## MySql
+* [utf8](./mysql/utf8.md)
+
 ## Terminal Productivity
 - https://github.com/junegunn/fzf
 - https://github.com/sharkdp/bat
