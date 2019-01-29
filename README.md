@@ -19,6 +19,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 
 ## Linux Commands
 * [scp](./linux_commands/scp.md)
+* [less](./linux_commands/less.md)
 
 ## Ruby on Rails
 * [find_each](./ruby_on_rails/find_each.md)
