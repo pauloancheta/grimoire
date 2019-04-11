@@ -32,6 +32,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 
 ## Vim
 * [expand directory](./vim/expand_directory.md)
+* [new line](./vim/new_line.md)
 
 ## Git
 * [patch](./git/patch.md)
