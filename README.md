@@ -24,6 +24,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 
 ## Ruby on Rails
 * [find_each](./ruby_on_rails/find_each.md)
+* [installation](./ruby_on_rails/installation.md)
 * [dead_code](./ruby_on_rails/dead_code.md)
 
 ## Python
