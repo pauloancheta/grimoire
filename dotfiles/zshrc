@@ -49,7 +49,7 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-completions kubectl docker)
+plugins=(git kubectl docker)
 
 # User configuration
 
@@ -135,9 +135,9 @@ export PATH=$PATH:$GOPATH/bin
 export MPLBACKEND="module://itermplot"
 export ITERMPLOT=rv
 # use pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # load nvm
@@ -159,12 +159,6 @@ export PATH="./bin:$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
 ####################################
 #      CURRENT PROJECTS            #
 ####################################
-
-alias unbounce='cd ~/unbounce'
-alias core='cd ~/unbounce/core'
-alias portal='cd ~/unbounce/customer_portal'
-alias ubdata='cd ~/unbounce/data'
-
 alias dotfiles='cd ~/.dotfiles'
 alias grimoire='vim ~/grimoire'
 
