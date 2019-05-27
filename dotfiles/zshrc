@@ -90,17 +90,12 @@ alias ...='cd ../../' # preferred cd configuration
 # VIM
 alias vim='nvim'
 
-# HEROKU
-alias gph='git push heroku master' # push master branch to heroku
-
 # RUBY / RAILS
 alias rs='rails s'
 alias rc='rails c'
 alias cc='cucumber'
 alias be='bundle exec'
 alias watch='watch '
-alias east='aws-ec2-list --columns="project, stack_name, public_dns_name, instance_id, state"'
-alias west='aws-ec2-list --region=us-west-2 --columns="project, stack_name, instance_id, public_dns_name, state"'
 
 # ELIXIR / PHOENIX
 alias mps='mix phoneix.server'
@@ -120,58 +115,46 @@ alias ku='kubectl --kubeconfig kubeconfig'
 alias kun='kubectl --kubeconfig kubeconfig -n unbounce-system'
 alias kinfo='watch "kubectl get deployment,svc,pods,pvc"'
 
+alias grimoire='cd ~/grimoire'
+
 ####################################
 #        PATH CHANGE!              #
 ####################################
-# for elixir manager
-[[ -s "$HOME/.kiex/scripts/kiex" ]] && source "$HOME/.kiex/scripts/kiex"
+export MANPATH=/usr/local/man:$MANPATH
+export PATH="$HOME/grimoire/bin:$PATH"
 
-# for go lang
+# GO
 export GOPATH=~/go
 export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:$GOPATH/bin
 
-# python ML
-export MPLBACKEND="module://itermplot"
-export ITERMPLOT=rv
+# PYTHON
+# export MPLBACKEND="module://itermplot"
+# export ITERMPLOT=rv
 # use pyenv
 # export PYENV_ROOT="$HOME/.pyenv"
 # export PATH="$PYENV_ROOT/bin:$PATH"
 # eval "$(pyenv init -)"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # load nvm
-
-export MANPATH=/usr/local/man:$MANPATH
-# export PATH=/usr/local/heroku/bin:$PATH
-export PATH="$HOME/.dotfiles/scripts:$PATH"
-
-# for java
-# export JAVA_HOME=$(/usr/libexec/java_home)
-
-# mysql 5.6
-# export PATH="/usr/local/opt/mysql@5.6/bin:$PATH"
-
-# rbenv paths
+# RUBY
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 export PATH="./bin:$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
 
-####################################
-#      CURRENT PROJECTS            #
-####################################
-alias dotfiles='cd ~/.dotfiles'
-alias grimoire='vim ~/grimoire'
+# NODE
+export NVM_DIR="$HOME/.nvm"
+export NVMjjjjjjjjjjj
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
 
-# added by travis gem
-[ -f /Users/pauloancheta/.travis/travis.sh ] && source /Users/pauloancheta/.travis/travis.sh
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# ELIXIR (can be used for go, node, and ruby as well)
+[[ -s "/usr/local/opt/asdf/asdf.sh" ]] && source /usr/local/opt/asdf/asdf.sh
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/pauloancheta/go/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/pauloancheta/go/google-cloud-sdk/path.zsh.inc'; fi
-
+# if [ -f '/Users/pauloancheta/go/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/pauloancheta/go/google-cloud-sdk/path.zsh.inc'; fi
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/pauloancheta/go/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/pauloancheta/go/google-cloud-sdk/completion.zsh.inc'; fi
+# if [ -f '/Users/pauloancheta/go/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/pauloancheta/go/google-cloud-sdk/completion.zsh.inc'; fi
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
