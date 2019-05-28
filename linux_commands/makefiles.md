@@ -52,3 +52,15 @@ Makefile:22: *** Variable undefined: MERP_VALUE (Please specify a `MERP_VALUE` (
 $> MERP_VALUE=derp make merp
 merpy derp
 ```
+
+## Defaults
+By default, `make` will run all of the targets. While this could be useful, it would be better if it
+defaults to a `help` instead. To do this, use the `.DEFAULT_GOAL`
+
+```make
+.DEFAULT_GOAL := help
+
+.PHONY: help
+help: ## display this message
+  ...
+```
