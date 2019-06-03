@@ -34,3 +34,5 @@
 
 [credential]
 	helper = store
+[pager]
+	branch = false
