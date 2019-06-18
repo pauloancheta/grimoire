@@ -5,6 +5,7 @@ export ZSH=/Users/pauloancheta/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
+SOLARIZED_THEME="light"
 ZSH_THEME="agnoster"
 
 # Uncomment the following line to use case-sensitive completion.
@@ -129,6 +130,7 @@ export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:$GOPATH/bin
 
 # PYTHON
+export PATH=$PATH:~/.local/bin
 # export MPLBACKEND="module://itermplot"
 # export ITERMPLOT=rv
 # use pyenv
@@ -142,7 +144,6 @@ export PATH="./bin:$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
 
 # NODE
 export NVM_DIR="$HOME/.nvm"
-export NVMjjjjjjjjjjj
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
 

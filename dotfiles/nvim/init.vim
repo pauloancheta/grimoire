@@ -86,8 +86,9 @@ set colorcolumn=100
 set background=dark
 let g:solarized_termcolors=32
 let g:solarized_termtrans=1
-colorscheme jellybeans
-highlight ColorColumn guibg=Black
+colorscheme solarized
+set background=light
+" highlight ColorColumn guibg=Black
 
 " ------------------------------------------------------------------------------------
 "                                  MORE CONFIG!
