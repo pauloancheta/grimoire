@@ -13,4 +13,4 @@ fi
 source "/usr/local/opt/fzf/shell/key-bindings.zsh"
 
 export FZF_DEFAULT_OPTS='--height 60% --layout=reverse'
-export FZF_CTRL_T_OPTS="--preview='bat --color=always {}'"
+export FZF_CTRL_T_OPTS="--preview='bat --color=always {} --theme=GitHub'"

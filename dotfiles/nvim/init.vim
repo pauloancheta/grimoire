@@ -27,6 +27,7 @@ call plug#begin('~/.nvim/plugged')
 
   Plug 'vim-airline/vim-airline-themes'
   Plug 'vim-scripts/HTML-AutoCloseTag'
+  Plug 'liuchengxu/space-vim-theme'
 
   " Plug 'godlygeek/tabular'
   " Plug 'garbas/vim-snipmate'
@@ -108,6 +109,8 @@ set nopaste       " get that annoying paste out
 set nohls         " don't highlight everything
 set so=10         " have cursor relatively in the middle
 set nopaste
+set foldmethod=indent
+set foldlevel=99
 
 " ------------------------------------------------------------------------------------
 "                                  KEY BINDINGS
@@ -190,3 +193,9 @@ if has('nvim')
   tmap <C-o> <C-\><C-n>
 end
 autocmd filetype crontab setlocal nobackup nowritebackup
+
+" fold comments
+" autocmd FileType ruby,eruby
+"       \ set foldmethod=expr |
+"       \ set foldexpr=getline(v:lnum)=~'^\\s*#' |
+"       \ exe "normal zM``"
