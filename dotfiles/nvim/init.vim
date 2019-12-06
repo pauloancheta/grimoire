@@ -26,8 +26,8 @@ call plug#begin('~/.nvim/plugged')
   Plug 'tpope/vim-rails'
 
   Plug 'vim-airline/vim-airline-themes'
-  Plug 'vim-scripts/HTML-AutoCloseTag'
-  Plug 'liuchengxu/space-vim-theme'
+  " Plug 'vim-scripts/HTML-AutoCloseTag'
+  " Plug 'liuchengxu/space-vim-theme'
 
   " Plug 'godlygeek/tabular'
   " Plug 'garbas/vim-snipmate'
@@ -45,22 +45,29 @@ let test#strategy = "neovim"
 
 " NEOMAKE
 map <silent> <A-M> :Neomake<cr>
-map <silent> <A-<> :lopen<cr>
-map <silent> <A->> :lclose<cr>
+map <silent> <A-,> :lopen<cr>
+map <silent> <A-.> :lclose<cr>
 let g:neomake_javascript_enabled_makers = ['eslint']
-" call neomake#configure#automake('rw', 1000)
-" call neomake#configure#automake('w')
+" When writing a buffer (no delay).
+call neomake#configure#automake('w')
+" When writing a buffer (no delay), and on normal mode changes (after 750ms).
+call neomake#configure#automake('nw', 750)
+" When reading a buffer (after 1s), and when writing (no delay).
+call neomake#configure#automake('rw', 1000)
+" Full config: when writing or reading a buffer, and on changes in insert and
+" normal mode (after 1s; no delay when writing).
+call neomake#configure#automake('nrwi', 500)
 " au BufReadPost,BufWritePost * Neomake
 
 " SYNTASTIC
 " set statusline=%f:%l\ %m%=[line\ %l\/%L]
-" let g:syntastic_enable_signs=1
-" let g:syntastic_auto_loc_list=2
+let g:syntastic_enable_signs=1
+let g:syntastic_auto_loc_list=2
 
 " VIM-AIRLINE
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='base16'
-let g:airline_solarized_bg='dark'
+let g:airline_solarized_bg='light'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#hunks#enabled=0
 let g:airline#extensions#default#layout = [['a', 'b', 'c'],['z']]
@@ -83,11 +90,11 @@ let g:ctrlp_working_path_mode = 'rw'
 let g:AutoPairsFlyMode = 0
 
 " COLORS
-set colorcolumn=100
+set colorcolumn=120
 set background=dark
 let g:solarized_termcolors=32
 let g:solarized_termtrans=1
-colorscheme solarized
+colorscheme jellybeans
 " highlight ColorColumn guibg=Black
 
 " ------------------------------------------------------------------------------------

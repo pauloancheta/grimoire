@@ -1,0 +1,38 @@
+#!/bin/bash
+
+PATH_DEV="$HOME/work"
+PATH_CORE_API="$PATH_DEV/core-api"
+
+# Setup work session
+tmux new-session -d -c "$PATH_CORE_API" -s work
+
+# Setup core-api services
+tmux \
+  rename-window core-api \; \
+  send-keys "cd $PATH_CORE_API" C-m \; \
+  send-keys "make run" C-m \; \
+  split-window -v -c "$PATH_CORE_API" \; \
+  send-keys "make sidekiq" C-m \; \
+  split-window -v -c "$PATH_CORE_API" \; \
+  send-keys "make shoryuken-with-okta" C-m \; \
+  select-layout even-vertical
+
+# Setup core-client-app service
+tmux \
+  new-window -c "$PATH_DEV/core-client-app" -n core-client \; \
+  send-keys "make run" C-m
+
+# Setup data-indexing-service service
+tmux \
+  new-window -c "$PATH_DEV/data-indexing-service" -n data-indexing \; \
+  send-keys "make run" C-m
+
+# Setup elixir-app-collection service
+tmux \
+  new-window -c "$PATH_DEV/elixir-app-collection" -n elixir-apps \; \
+  send-keys "make run" C-m
+
+# Setup file-delivery-api service
+tmux \
+  new-window -c "$PATH_DEV/file-delivery-api" -n file-delivery-api \; \
+  send-keys "make okta" C-m

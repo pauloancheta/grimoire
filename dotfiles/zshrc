@@ -81,6 +81,7 @@ alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias gitconfig="nvim ~/.gitconfig"
 alias vimconfig="nvim ~/.vimrc.after"
 alias nvimconfig="nvim ~/.config/nvim/init.vim"
+alias awsconfig="nvim ~/.aws/config"
 
 #---------BETTER TERMINAL-----------
 alias ll='ls -lA'       # preferred ls configuration
