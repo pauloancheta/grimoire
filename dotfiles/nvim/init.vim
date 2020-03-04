@@ -146,6 +146,10 @@ inoremap <A-k> <Esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
+" MAXIMIZE AND RESTORE
+nmap <A-=> <C-w>=
+nmap <A-+> <C-w>\| <C-w>_
+
 " YANK TO CLIPBOARD
 imap <C-V> <Esc>"+gPi
 " hello world

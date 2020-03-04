@@ -35,6 +35,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 
 ## Vim
 * [expand directory](./vim/expand_directory.md)
+* [maximize and restore tabs](./vim/maximize_and_restore_tabs.md)
 * [new line](./vim/new_line.md)
 
 ## Git
