@@ -16,13 +16,13 @@ call plug#begin('~/.nvim/plugged')
   Plug 'rking/ag.vim'
 
   Plug 'scrooloose/syntastic'
-  Plug 'scrooloose/nerdtree'
   Plug 'sheerun/vim-polyglot' " SYNTAX HIGHLIGHTS
 
   Plug 'terryma/vim-multiple-cursors'
   Plug 'tpope/vim-dispatch'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-sensible'
+  Plug 'tpope/vim-vinegar'
   Plug 'tpope/vim-rails'
 
   Plug 'vim-airline/vim-airline-themes'
@@ -161,7 +161,7 @@ tnoremap <C-q> <C-\><C-n>
 imap <C-q> <ESC>
 
 " NERDTree
-nnoremap <silent> <leader>\ :NERDTreeToggle<CR>
+nnoremap <silent> <leader>\ :e.<CR>
 
 nnoremap ; :
 vnoremap ; :
