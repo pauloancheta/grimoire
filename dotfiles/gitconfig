@@ -1,6 +1,6 @@
 [user]
 	name = Paulo Ancheta
-	email = paulo.ancheta@gmail.com
+	email = paulo@supercast.com
 [filter "lfs"]
 	clean = git lfs clean %f
 	smudge = git lfs smudge %f
@@ -32,5 +32,12 @@
 	wip = !git add . && git commit -m “WIP” --allow-empty
 	it = git init && git add -A && git commit -m 'Initial Commit'
 
+  bls = branch
+  brm = branch -d
+  cd = checkout
+
+
 [credential]
 	helper = store
+[pager]
+	branch = false

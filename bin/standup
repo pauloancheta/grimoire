@@ -1,0 +1,40 @@
+#!/bin/bash
+
+yesterday_array=()
+today_array=()
+blockers_array=()
+
+echo "what did you do yesterday? 🤓"
+read -r yesterday
+while [[ "done" != "${yesterday}" ]]; do
+  yesterday_array+=("• ${yesterday}")
+  echo "What else did you do? Type 'done' when you're done :)"
+  read -r yesterday
+done
+
+echo "what are you going to do today? 😎"
+read -r today
+while [[ "done" != "${today}" ]]; do
+  today_array+=("• ${today}")
+  echo "What else are you going to do? Type 'done' when you're done :)"
+  read -r today
+done
+
+echo "Do you have any blockers? 🙅‍♀️🙅‍♂️"
+read -r blockers
+while [[ "done" != "${blockers}" ]]; do
+  blockers_array+=("• ${blockers}")
+  echo "Anything else blocking you? Type 'done' when you're done :)"
+  read -r blockers
+done
+
+
+IFS=$'\n'
+echo """
+*Yesterday* 🤓
+${yesterday_array[*]}
+*Today* 😎
+${today_array[*]}
+*Blockers* 🙅‍♀️🙅‍♂️
+${blockers_array[*]}
+""" | pbcopy
