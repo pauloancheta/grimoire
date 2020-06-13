@@ -8,8 +8,9 @@ call plug#begin('~/.nvim/plugged')
   Plug 'jalvesaq/Nvim-R'
   Plug 'janko-m/vim-test'
   Plug 'jiangmiao/auto-pairs'
+  Plug 'junegunn/fzf'
+  Plug 'junegunn/fzf.vim'
 
-  Plug 'kien/ctrlp.vim'
 
   Plug 'neomake/neomake'
 
@@ -82,9 +83,12 @@ let g:multi_cursor_quit_key='<Esc>'
 " let g:gitgutter_realtime = 0
 " let g:gitgutter_eager = 0
 
-" NERDtree
-let g:NERDTreeChDirMode       = 2
-let g:ctrlp_working_path_mode = 'rw'
+" FZF
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
 " AUTO-PAIRS
 let g:AutoPairsFlyMode = 0
@@ -160,8 +164,11 @@ vmap <C-C> "+y
 tnoremap <C-q> <C-\><C-n>
 imap <C-q> <ESC>
 
-" NERDTree
+" netrw
 nnoremap <silent> <leader>\ :e.<CR>
+
+" fzf
+nnoremap <silent> <C-p> :FZF<CR>
 
 nnoremap ; :
 vnoremap ; :
