@@ -27,6 +27,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [installation](./ruby_on_rails/installation.md)
 * [dead_code](./ruby_on_rails/dead_code.md)
 * [rake_tasks](./ruby_on_rails/rake_tasks.md)
+* [setting_cucumber_cookies](./ruby_on_rails/setting_cucumber_cookies.md)
 
 ## Python
 * [open](./python/open.md)
