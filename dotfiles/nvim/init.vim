@@ -10,7 +10,7 @@ call plug#begin('~/.nvim/plugged')
   Plug 'jiangmiao/auto-pairs'
   Plug 'junegunn/fzf'
   Plug 'junegunn/fzf.vim'
-
+  Plug 'junegunn/seoul256.vim'
 
   Plug 'neomake/neomake'
 
@@ -48,7 +48,8 @@ let test#strategy = "neovim"
 map <silent> <A-M> :Neomake<cr>
 map <silent> <A-,> :lopen<cr>
 map <silent> <A-.> :lclose<cr>
-let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_javascript_enabled_makers = ['prettier']
+let g:syntastic_jshin_exec='/Users/pauloancheta/.rbenv/shims/jshint'
 " When writing a buffer (no delay).
 call neomake#configure#automake('w')
 " When writing a buffer (no delay), and on normal mode changes (after 750ms).
