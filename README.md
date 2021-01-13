@@ -28,6 +28,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [dead_code](./ruby_on_rails/dead_code.md)
 * [rake_tasks](./ruby_on_rails/rake_tasks.md)
 * [setting_cucumber_cookies](./ruby_on_rails/setting_cucumber_cookies.md)
+* [Deploy to Elastic Beanstalk](./ruby_on_rails/deploy_to_elastic_beanstalk.md)
 
 ## Python
 * [open](./python/open.md)
