@@ -2014,6 +2014,12 @@
 			<key>value</key>
 			<string>Subscription.select(:user_id, :subscribable_type, :subscribable_id, :network_bundle_id).group(:user_id, :subscribable_type, :subscribable_id, :network_bundle_id).having("count(*) &gt; 1").size</string>
 		</dict>
+		<dict>
+			<key>title</key>
+			<string>Find duplicate FeedToken</string>
+			<key>value</key>
+			<string>FeedToken.select(:user_id, :channel_id, :subscription_id).group(:user_id, :channel_id, :subscription_id).having("count(*) &gt; 1").size</string>
+		</dict>
 	</array>
 	<key>SoundForEsc</key>
 	<false/>

@@ -81,8 +81,8 @@ let g:multi_cursor_next_key='<C-n>'
 let g:multi_cursor_quit_key='<Esc>'
 
 " GIT-GUTTER
-" let g:gitgutter_realtime = 0
-" let g:gitgutter_eager = 0
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 0
 
 " FZF
 " This is the default extra key bindings
@@ -95,12 +95,13 @@ let g:fzf_action = {
 let g:AutoPairsFlyMode = 0
 
 " COLORS
+autocmd ColorScheme * highlight! link SignColumn LineNr
 set colorcolumn=120
-set background=dark
+set background=light
 let g:solarized_termcolors=32
 let g:solarized_termtrans=1
-colorscheme jellybeans
-" highlight ColorColumn guibg=Black
+colorscheme solarized
+highlight ColorColumn guibg=Red
 
 " ------------------------------------------------------------------------------------
 "                                  MORE CONFIG!
