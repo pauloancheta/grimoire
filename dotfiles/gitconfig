@@ -1,6 +1,6 @@
 [user]
 	name = Paulo Ancheta
-	email = paulo@supercast.com
+	email = paulo.ancheta@gmail.com
 [filter "lfs"]
 	clean = git lfs clean %f
 	smudge = git lfs smudge %f

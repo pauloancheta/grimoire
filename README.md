@@ -29,6 +29,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [rake_tasks](./ruby_on_rails/rake_tasks.md)
 * [setting_cucumber_cookies](./ruby_on_rails/setting_cucumber_cookies.md)
 * [Deploy to Elastic Beanstalk](./ruby_on_rails/deploy_to_elastic_beanstalk.md)
+* [Sanitize SQL Query](./ruby_on_rails/sanitize_sql_query.md)
 
 ## Python
 * [open](./python/open.md)

@@ -16,7 +16,7 @@ call plug#begin('~/.nvim/plugged')
 
   Plug 'rking/ag.vim'
 
-  Plug 'scrooloose/syntastic'
+  " Plug 'scrooloose/syntastic'
   Plug 'sheerun/vim-polyglot' " SYNTAX HIGHLIGHTS
 
   Plug 'terryma/vim-multiple-cursors'
@@ -27,6 +27,7 @@ call plug#begin('~/.nvim/plugged')
   Plug 'tpope/vim-rails'
 
   Plug 'vim-airline/vim-airline-themes'
+  Plug 'preservim/vim-colors-pencil'
   " Plug 'vim-scripts/HTML-AutoCloseTag'
   " Plug 'liuchengxu/space-vim-theme'
 
@@ -48,8 +49,8 @@ let test#strategy = "neovim"
 map <silent> <A-M> :Neomake<cr>
 map <silent> <A-,> :lopen<cr>
 map <silent> <A-.> :lclose<cr>
-let g:neomake_javascript_enabled_makers = ['prettier']
-let g:syntastic_jshin_exec='/Users/pauloancheta/.rbenv/shims/jshint'
+let g:neomake_javascript_enabled_makers=['eslint']
+
 " When writing a buffer (no delay).
 call neomake#configure#automake('w')
 " When writing a buffer (no delay), and on normal mode changes (after 750ms).
@@ -63,8 +64,9 @@ call neomake#configure#automake('nrwi', 500)
 
 " SYNTASTIC
 " set statusline=%f:%l\ %m%=[line\ %l\/%L]
-let g:syntastic_enable_signs=1
-let g:syntastic_auto_loc_list=2
+" let g:syntastic_enable_signs=1
+" let g:syntastic_auto_loc_list=2
+" let g:syntastic_javascript_checkers=['prettier']
 
 " VIM-AIRLINE
 let g:airline#extensions#tabline#enabled = 1
@@ -96,12 +98,15 @@ let g:AutoPairsFlyMode = 0
 
 " COLORS
 autocmd ColorScheme * highlight! link SignColumn LineNr
-set colorcolumn=120
-set background=light
-let g:solarized_termcolors=32
-let g:solarized_termtrans=1
-colorscheme solarized
+set colorcolumn=100
+set background=dark
+" let g:solarized_termcolors=32
+" let g:solarized_termtrans=1
+colorscheme pencil
 highlight ColorColumn guibg=Red
+let g:pencil_higher_contrast_ui=1
+let g:pencil_neutral_headings=1
+let g:pencil_neutral_code_bg=1
 
 " ------------------------------------------------------------------------------------
 "                                  MORE CONFIG!
@@ -177,9 +182,9 @@ vnoremap ; :
 cnoreabbrev ag Ag
 cnoreabbrev praise Gblame
 cnoremap %% <C-R>=expand('%:p').'/'<cr>
-map <leader>ew :e %%
-map <leader>ev :vsp %%
-map <leader>et :tabe %%
+map <leader>ew :e %%<cr>
+map <leader>ev :vsp %%<cr>
+map <leader>et :tabe %%<cr>
 
 
 " ------------------------------------------------------------------------------------
