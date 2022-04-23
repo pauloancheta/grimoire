@@ -3,7 +3,7 @@ call plug#begin('~/.nvim/plugged')
 
   Plug 'bling/vim-airline'
 
-  Plug 'gko/vim-coloresque'
+  " Plug 'gko/vim-coloresque'
 
   Plug 'jalvesaq/Nvim-R'
   Plug 'janko-m/vim-test'
