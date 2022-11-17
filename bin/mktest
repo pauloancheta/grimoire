@@ -37,7 +37,9 @@ FILES.each do |file_path|
   code = %(require "test_helper"
 
 class #{full_klass_name}Test < ActiveSupport::TestCase
-
+  test "should work" do
+    assert_equal 1, 1
+  end
 end
 )
 
