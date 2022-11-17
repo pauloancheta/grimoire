@@ -34,9 +34,9 @@ FILES.each do |file_path|
   klass_name = file.gsub(/\.rb$/, '').split('_').map(&:capitalize).join
   full_klass_name = (namespaces + [klass_name]).join('::')
 
-  code = %(require "rails_helper"
+  code = %(require "test_helper"
 
-describe #{full_klass_name} do
+class #{full_klass_name}Test < ActiveSupport::TestCase
 
 end
 )
