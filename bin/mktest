@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+
+# frozen_string_literal: true
+
+DESC = "
+
+Generate spec file
+
+Example: mkspec app/services/user/create.rb will generate spec/services/user/create_spec.rb
+
+"
+
+FILES = ARGV
+
+if FILES.empty?
+  puts DESC
+  exit 1
+end
+
+require 'fileutils'
+
+FILES.each do |file_path|
+  unless File.exist?(file_path)
+    puts "#{file_path} does not exists - Skipping..."
+    next
+  end
+
+  _, top_dir, *sub_dirs, file = file_path.split('/')
+
+  spec_dir_path = ['test', top_dir, sub_dirs].flatten.join('/')
+  spec_file_path = [spec_dir_path, file.gsub(/\.rb$/, '_test.rb')].join('/')
+
+  namespaces = sub_dirs.map { |str| str.split('_').map(&:capitalize).join }
+  klass_name = file.gsub(/\.rb$/, '').split('_').map(&:capitalize).join
+  full_klass_name = (namespaces + [klass_name]).join('::')
+
+  code = %(require "rails_helper"
+
+describe #{full_klass_name} do
+
+end
+)
+
+  if File.exist?(spec_file_path)
+    puts "#{spec_file_path} exists - Skipping..."
+  else
+    puts "#{spec_file_path} created!"
+    FileUtils.mkpath spec_dir_path
+    File.open(spec_file_path, 'w') do |f|
+      f.puts code
+    end
+  end
+end
