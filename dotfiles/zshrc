@@ -163,9 +163,14 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="/usr/local/opt/postgresql@12/bin:$PATH"
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 
-# android
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+#zipline specific
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+
+source ~/grimoire/bin/fzf-git.sh
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/pauloancheta/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/pauloancheta/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/pauloancheta/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/pauloancheta/google-cloud-sdk/completion.zsh.inc'; fi
