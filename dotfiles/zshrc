@@ -136,7 +136,7 @@ export PATH=$PATH:~/.local/bin
 # use pyenv
 # export PYENV_ROOT="$HOME/.pyenv"
 # export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# eval "$(pyenv init -)"
 
 # RUBY
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
@@ -159,7 +159,7 @@ export NVM_DIR="$HOME/.nvm"
 # if [ -f '/Users/pauloancheta/go/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/pauloancheta/go/google-cloud-sdk/completion.zsh.inc'; fi
 
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-source ~/.iterm2_shell_integration.zsh
+# source ~/.iterm2_shell_integration.zsh
 export PATH="/usr/local/opt/postgresql@12/bin:$PATH"
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 
