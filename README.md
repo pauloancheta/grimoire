@@ -22,6 +22,9 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [less](./linux_commands/less.md)
 * [make](./linux_commands/make.md)
 
+## Ruby
+* [pattern_matching](./ruby/pattern_matching.md)
+
 ## Ruby on Rails
 * [find_each](./ruby_on_rails/find_each.md)
 * [installation](./ruby_on_rails/installation.md)
