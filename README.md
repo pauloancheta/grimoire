@@ -34,6 +34,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [setting_cucumber_cookies](./ruby_on_rails/setting_cucumber_cookies.md)
 * [Deploy to Elastic Beanstalk](./ruby_on_rails/deploy_to_elastic_beanstalk.md)
 * [Sanitize SQL Query](./ruby_on_rails/sanitize_sql_query.md)
+* [Get Table Row Totals](./ruby_on_rails/get_table_totals.md)
 
 ## Python
 * [open](./python/open.md)
