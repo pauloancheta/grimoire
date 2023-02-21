@@ -44,6 +44,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [expand directory](./vim/expand_directory.md)
 * [maximize and restore tabs](./vim/maximize_and_restore_tabs.md)
 * [new line](./vim/new_line.md)
+* [remove empty lines](./vim/remove_empty_lines.md)
 
 ## Git
 * [patch](./git/patch.md)
