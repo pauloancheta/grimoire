@@ -23,6 +23,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [make](./linux_commands/make.md)
 
 ## Ruby
+* [benckmark-ips](./ruby/benckmark-ips.md)
 * [pattern_matching](./ruby/pattern_matching.md)
 
 ## Ruby on Rails
