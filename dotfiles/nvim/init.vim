@@ -99,10 +99,10 @@ let g:AutoPairsFlyMode = 0
 " COLORS
 autocmd ColorScheme * highlight! link SignColumn LineNr
 set colorcolumn=100
-set background=dark
-" let g:solarized_termcolors=32
-" let g:solarized_termtrans=1
-colorscheme pencil
+set background=light
+let g:solarized_termcolors=32
+let g:solarized_termtrans=1
+colorscheme solarized
 highlight ColorColumn guibg=Red
 let g:pencil_higher_contrast_ui=1
 let g:pencil_neutral_headings=1
@@ -148,6 +148,10 @@ nnoremap <A-J> :resize +5<CR>
 nmap <C-T> :tabe<CR>
 " map <leader>h :tabn<CR>
 " map <leader>l :tabp<CR>
+
+" BUFFERS
+nnoremap <leader>b :bn<CR>
+nnoremap <leader>B :bp<CR>
 
 " COPY AND PASTE LINES
 nnoremap <A-j> :m .+1<CR>==

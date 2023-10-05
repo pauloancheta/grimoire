@@ -49,7 +49,7 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git kubectl docker)
+plugins=(git kubectl)
 
 # User configuration
 
@@ -115,6 +115,8 @@ alias k='kubectl'
 alias ku='kubectl --kubeconfig kubeconfig'
 alias kun='kubectl --kubeconfig kubeconfig -n unbounce-system'
 alias kinfo='watch "kubectl get deployment,svc,pods,pvc"'
+
+alias tf='terraform'
 
 alias grimoire='cd ~/grimoire'
 
