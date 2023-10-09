@@ -1,0 +1,88 @@
+#!/usr/bin/env ruby
+
+require 'pry'
+
+class Node
+  attr_accessor :name, :line_number, :level, :value, :parent
+  def initialize(name:, line_number: 0, level: 0, value:, parent:)
+    @name = name
+    @line_number = line_number
+    @level = level
+    @value = value
+    @parent = parent
+  end
+
+  def inspect
+    "#<Node #{@name} line=#{@line_number} value=#{value}>"
+  end
+
+  def find(s_name)
+    return self if name == s_name
+    value.find { _1.name = s_name }
+  end
+end
+
+class Main
+  def call(file:, index: 1, parent: nil, start: nil)
+    File.open(file).each_line do |line|
+      next if !line.include?(":")
+
+      current_level = indent(line)
+      name = parse_line(line).first
+
+      node = Node.new(name: name,
+                      line_number: index,
+                      level: current_level,
+                      value: get_value(line),
+                      parent: parent)
+
+      start = node if current_level == 0
+
+      if parent.nil?
+        parent = node
+      elsif (current_level - parent.level).negative?
+        parent = find_parent(node, parent)
+        node.parent = parent
+      elsif parent.value.is_a?(Array) && node.value.is_a?(String)
+        parent.value << node
+      else
+        parent.value << node
+        parent = node
+      end
+
+      index += 1
+    end
+
+    start
+  end
+
+  private
+
+  def parse_line(line)
+    line.strip.split(":")
+  end
+
+  def indent(line)
+    line.count(" ") / 2
+  end
+
+  def get_value(line)
+    val = parse_line(line)
+    val.count > 1 ? val.last.strip : []
+  end
+
+  def find_parent(node, parent)
+    return parent if parent.level < node.level
+    find_parent(node, parent.parent)
+  end
+end
+
+start = Main.new.call(file: ENV['FILE'])
+
+string = ARGV.first
+current_node = start
+string.split(".").each do |name|
+  current_node = current_node.find(name)
+end
+
+puts "Found in line #{current_node.line_number}"
