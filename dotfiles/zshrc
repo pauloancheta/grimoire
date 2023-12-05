@@ -49,7 +49,7 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git kubectl)
+plugins=(git)
 
 # User configuration
 
@@ -184,3 +184,7 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 ## WORK
 # zipline specific
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+
+co() {
+  _fzf_git_each_ref --no-multi | xargs git checkout
+}
