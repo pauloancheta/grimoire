@@ -26,6 +26,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [benckmark-ips](./ruby/benckmark-ips.md)
 * [pattern_matching](./ruby/pattern_matching.md)
 * [Acts like array](./ruby/acts_like_array.md)
+* [Split Multi Chars](./ruby/split_multi_chars.md)
 
 ## Ruby on Rails
 * [find_each](./ruby_on_rails/find_each.md)
