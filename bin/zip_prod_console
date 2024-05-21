@@ -1,0 +1,3 @@
+#!/bin/bash
+
+heroku run 'rails c -- --no-multiline' -a zipline-production --size Standard-2x

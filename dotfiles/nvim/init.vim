@@ -102,7 +102,7 @@ set colorcolumn=100
 set background=light
 let g:solarized_termcolors=32
 let g:solarized_termtrans=1
-colorscheme solarized
+colorscheme pencil
 highlight ColorColumn guibg=Red
 let g:pencil_higher_contrast_ui=1
 let g:pencil_neutral_headings=1
@@ -166,9 +166,10 @@ nmap <A-=> <C-w>=
 nmap <A-+> <C-w>\| <C-w>_
 
 " YANK TO CLIPBOARD
-imap <C-V> <Esc>"+gPi
-" hello world
-vmap <C-C> "+y
+set clipboard=unnamed
+"imap <C-V> <Esc>"+gPi
+"" hello world
+"vmap <C-C> "+y
 
 " TERMINAL
 " map the same esc for normal and insert mode
