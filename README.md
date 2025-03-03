@@ -39,6 +39,7 @@ export PATH="$HOME/grimoire/bin:$PATH"
 * [Sanitize SQL Query](./ruby_on_rails/sanitize_sql_query.md)
 * [Get Table Row Totals](./ruby_on_rails/get_table_totals.md)
 * [Useful Sidekiq Commands](./ruby_on_rails/sidekiq_commands.md)
+* [Tables](./ruby_on_rails/tables.md)
 
 ## Python
 * [open](./python/open.md)
