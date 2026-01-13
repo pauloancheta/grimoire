@@ -97,16 +97,16 @@ let g:fzf_action = {
 let g:AutoPairsFlyMode = 0
 
 " COLORS
-autocmd ColorScheme * highlight! link SignColumn LineNr
+" autocmd ColorScheme * highlight! link SignColumn LineNr
 set colorcolumn=100
-set background=light
+set background=dark "light
 let g:solarized_termcolors=32
 let g:solarized_termtrans=1
-colorscheme pencil
-highlight ColorColumn guibg=Red
-let g:pencil_higher_contrast_ui=1
-let g:pencil_neutral_headings=1
-let g:pencil_neutral_code_bg=1
+colorscheme jellybeans "solarized
+" highlight ColorColumn guibg=Red
+" let g:pencil_higher_contrast_ui=1
+" let g:pencil_neutral_headings=1
+" let g:pencil_neutral_code_bg=1
 
 " ------------------------------------------------------------------------------------
 "                                  MORE CONFIG!

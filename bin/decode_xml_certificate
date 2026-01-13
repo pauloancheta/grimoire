@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# written by codex
+
+set -euo pipefail
+
+if [[ $# -ne 1 ]]; then
+echo "Usage: $0 <metadata.xml>"
+exit 1
+fi
+
+xml="$1"
+if [[ ! -f "$xml" ]]; then
+echo "File not found: $xml"
+exit 1
+fi
+
+# Extract certs and decode each one
+perl -0777 -ne '
+@c = /<ds:X509Certificate>(.*?)<\/ds:X509Certificate>/sg;
+$i = 0;
+for $cert (@c) {
+  $i++;
+  $cert =~ s/\s+//g;
+  print "=== Certificate $i ===\n";
+  print "-----BEGIN CERTIFICATE-----\n$cert\n-----END CERTIFICATE-----\n";
+}
+' "$xml" | awk '
+/^=== Certificate /{
+  if (pem) { print pem | "openssl x509 -noout -text"; close("openssl x509 -noout -text") }
+  print; pem=""; next
+}
+{ pem = pem $0 "\n" }
+END {
+  if (pem) { print pem | "openssl x509 -noout -text"; close("openssl x509 -noout -text") }
+}
+'

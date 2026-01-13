@@ -18,7 +18,7 @@ end
 require 'fileutils'
 
 FILES.each do |file_path|
-  unless File.exists?(file_path)
+  unless File.exist?(file_path)
     puts "#{file_path} does not exists - Skipping..."
     next
   end
