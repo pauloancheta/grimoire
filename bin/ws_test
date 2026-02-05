@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Usage:
+#
+# ./ws_test wss://example.com/cable "_session=M5zptnNsMFFtpep..."
+
+set -euo pipefail
+
+URL="${1:-wss://example.com/cable}"
+SESSION="${2:-REPLACE_ME}"
+
+if ! command -v websocat >/dev/null 2>&1; then
+  echo "websocat is required. Install with: brew install websocat"
+  exit 1
+fi
+
+if [[ "$SESSION" == "REPLACE_ME" ]]; then
+  echo "Usage: $0 <wss-url> <_zipline_session_value>"
+  exit 1
+fi
+
+echo "Connecting to: $URL"
+printf '{"command":"subscribe","identifier":"{\\"channel\\":\\"MessengerUserChannel\\"}"}\n' | \
+  websocat \
+  -H "Cookie: ${SESSION}" \
+  -H "Sec-WebSocket-Protocol: actioncable-v1-json" \
+  "$URL"
+
