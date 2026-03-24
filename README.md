@@ -11,6 +11,8 @@ Instead of adding custom scripts to `/usr/bin`, it's better to add this reposito
 # assuming that this repository is in your `~` dir.
 export PATH="$HOME/grimoire/bin:$PATH"
 ```
+## Authentications
+* [Oauth: Authorization Code Flow](./auth/oauth_auth_code.md)
 
 ## ITERM / Terminal
 * [cmd + B](./iterm/cmd_+_b.md)

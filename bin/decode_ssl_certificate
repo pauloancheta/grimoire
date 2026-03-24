@@ -1,0 +1,9 @@
+#!/bin/bash
+
+input="${*:-$(cat)}"
+printf '%s' "$input" \
+  | tr -d '[:space:]' \
+  | sed 's/-----BEGINCERTIFICATE-----//g' \
+  | sed 's/-----ENDCERTIFICATE-----//g' \
+  | openssl enc -base64 -d -A \
+  | openssl x509 -inform DER -text -noout

@@ -22,7 +22,7 @@ fi
 echo "Connecting to: $URL"
 printf '{"command":"subscribe","identifier":"{\\"channel\\":\\"MessengerUserChannel\\"}"}\n' | \
   websocat \
+  "$URL" \
   -H "Cookie: ${SESSION}" \
-  -H "Sec-WebSocket-Protocol: actioncable-v1-json" \
-  "$URL"
+  -H "Sec-WebSocket-Protocol: actioncable-v1-json"
 
