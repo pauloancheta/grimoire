@@ -62,3 +62,15 @@ export PATH="$HOME/grimoire/bin:$PATH"
 ## Terminal Productivity
 - https://github.com/junegunn/fzf
 - https://github.com/sharkdp/bat
+
+## Claude Code
+
+Skills and config live in `claude/`. Run `_install` to symlink them into `~/.claude/`.
+
+### Skills (`claude/skills/`)
+* [dev](./claude/skills/dev/SKILL.md) - Worker mode: worktree per ticket, tester + reviewer gates before push
+* [standup](./claude/skills/standup/SKILL.md) - Daily standup from GitHub and Jira activity
+* [performance-review](./claude/skills/performance-review/SKILL.md) - 6-month performance review from GitHub and Jira
+
+### Config (`claude/`)
+* [statusline-command.sh](./claude/statusline-command.sh) - Claude Code statusline setup

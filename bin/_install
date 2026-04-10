@@ -3,3 +3,12 @@
 for found in ~/grimoire/dotfiles/*; do
   ln -fs $found ~/.$(basename $found)
 done
+
+# Claude Code skills
+mkdir -p ~/.claude/skills
+for found in ~/grimoire/claude/skills/*; do
+  ln -fs $found ~/.claude/skills/$(basename $found)
+done
+
+# Claude Code config
+ln -fs ~/grimoire/claude/statusline-command.sh ~/.claude/statusline-command.sh
