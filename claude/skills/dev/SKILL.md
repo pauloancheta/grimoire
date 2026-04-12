@@ -55,102 +55,149 @@ Fetch `$TICKET_TYPE`, `$TICKET_TITLE`, `$TICKET_DESCRIPTION` from Jira first.
 
 | | Fast | Standard | Full |
 |---|---|---|---|
-| Worktree | No | Yes | Yes |
-| Researcher | Skip | Reduced budget | Full budget |
+| Researcher | Skip | Foreground, reduced budget | Foreground, full budget |
+| Plan mode | One-line confirm | Lightweight (approach + files + checklist) | Full (context + approach + risks + questions + checklist) |
+| Worktree | No | Yes, background during plan review | Yes, background during plan review |
 | Tester | Skip | Parallel with reviewer | Sequential first |
 | Reviewer | Yes (lightweight, no worktree) | Parallel with tester | Sequential after tester |
 
 Set `$MODE = fast | standard | full` and carry it through all phases.
 
-**Fast path:** skip Phases 1–2. Work directly in the main repo, commit. Go straight to Phase 3 (reviewer only, no tester).
-
 ---
 
-## Phase 1: Worktree Setup
+## Phase 0.5: Researcher (Foreground)
 
-### Compute paths
+Skip if `$MODE = fast`.
 
+Compute base paths first:
 ```bash
 REPO_ROOT=$(git rev-parse --show-toplevel)
 REPO_PARENT=$(dirname "$REPO_ROOT")
-WORKTREES_ROOT="$REPO_PARENT/zipline-app-wt"
 RESEARCH_BASE="$REPO_PARENT/zipline-research"
 ```
 
-### Check if worktree exists
+Read `.claude/skills/dev/researcher-prompt.md` and spawn an Agent **synchronously** (no `run_in_background`) with:
+- Full contents of `researcher-prompt.md` as instructions
+- `$TICKET_ID`, `$TICKET_TITLE`, `$TICKET_DESCRIPTION` from Jira
+- `$RESEARCH_BASE` path
+- `$REPO_ROOT` (main repo, not worktree — worktree doesn't exist yet)
+- `$MODE`
 
-```bash
-git worktree list --porcelain | grep "$WORKTREES_ROOT/zip-XXXX"
-```
+Wait for the researcher to complete and write `<!-- status: ready -->` to `findings.md` before proceeding.
 
-### Creating a new worktree
+---
 
-1. Fetch the Jira ticket title and type using the Atlassian MCP.
-2. Derive the branch name from the ticket type:
+## Phase 0.7: Plan Mode
+
+### Fast mode — one-line confirm
+
+State exactly what you will do and where:
+> "Going to [change] in [file]. Proceed?"
+
+Wait for confirmation. On yes, go directly to Phase 2 (no worktree).
+
+---
+
+### Standard and Full mode — structured plan
+
+Enter plan mode (use the `EnterPlanMode` tool). In plan mode:
+
+1. Read `$RESEARCH_BASE/tickets/$TICKET_ID/findings.md`
+2. Explore 3–5 codebase files most relevant to the ticket (read only, no edits)
+3. Derive the branch name from ticket type:
    - Feature → `feature/zip-XXXX-<slug>`
    - Bug → `bugfix/zip-XXXX-<slug>`
    - Internal/chore → `internal/zip-XXXX-<slug>`
-   - Slug: lowercase title, spaces to hyphens, max 5 words.
-3. Create the worktree:
+   - Slug: lowercase title, spaces to hyphens, max 5 words
+4. **Start worktree creation in background** while you write the plan:
    ```bash
-   git worktree add "$WORKTREES_ROOT/zip-XXXX-<slug>" -b "<branch-name>"
+   git worktree add "$WORKTREES_ROOT/zip-XXXX-<slug>" -b "<branch-name>" &
    ```
-4. Create `TICKET_CONTEXT.md` in the worktree root (see format below).
-5. Spawn the Researcher in the background (see Phase 1.5 below).
-6. Tell the user: "Worktree ready at `zipline-app-wt/zip-XXXX-<slug>`. Researcher running in background. Starting ZIP-XXXX."
+5. Write and present the plan to the user (format below by mode)
+6. Wait for user approval or edits
 
-### Resuming an existing worktree
+On approval, exit plan mode (`ExitPlanMode` tool). Write the approved plan into `TICKET_CONTEXT.md`.
 
-When resuming, also spawn the Researcher in the background (Phase 1.5). It will pick up any new domain knowledge written since the last session and append findings.
+### Plan format — Standard
 
-1. Find the path: `git worktree list --porcelain | grep -A1 "zip-XXXX"`
-2. Read `$WORKTREE_PATH/TICKET_CONTEXT.md`
-3. Run in parallel:
+```markdown
+## Plan: ZIP-XXXX — <title>
+
+### Approach
+<2–3 sentences on what changes and why>
+
+### Files
+- path/to/file.rb — <what changes>
+- path/to/other.rb — <what changes>
+
+### From research
+- <key finding that shaped this plan>
+
+### Checklist
+- [ ] task
+- [ ] task
+```
+
+### Plan format — Full
+
+```markdown
+## Plan: ZIP-XXXX — <title>
+
+### Context
+<key findings from researcher that shaped this approach — 3–5 bullets>
+
+### Approach
+<paragraph explaining the implementation strategy>
+
+### Files
+- path/to/file.rb — <what changes and why>
+
+### Risks
+- <risk and mitigation>
+
+### Open questions
+<questions for the user before building, if any — omit section if none>
+
+### Checklist
+- [ ] task
+- [ ] task
+```
+
+### Resuming a ticket
+
+If `TICKET_CONTEXT.md` already has a `## Plan` section, skip Phase 0.5 and 0.7. Instead:
+
+1. Read `TICKET_CONTEXT.md`
+2. Run git status in parallel:
    ```bash
    git -C "$WORKTREE_PATH" log origin/main..HEAD --oneline
    git -C "$WORKTREE_PATH" diff origin/main...HEAD --stat
    git -C "$WORKTREE_PATH" status --short
    ```
-4. Present a one-paragraph summary:
-   > "Resuming ZIP-XXXX. Status: [from context]. [N commits ahead of main]. Pending: [items from checklist]. [Any unresolved issues from last review]."
+3. Present a one-paragraph resume summary:
+   > "Resuming ZIP-XXXX. Status: [from context]. [N commits ahead]. Pending: [checklist items]. [Any unresolved review issues]."
 
 ---
 
-## Phase 1.5: Spawn Researcher (Background)
-
-Skip entirely if `$MODE = fast`.
-
-Immediately after worktree setup (new or resumed), spawn the Researcher as a background agent.
-
-Read `.claude/skills/dev/researcher-prompt.md` and spawn an Agent with:
-- `run_in_background: true`
-- Full contents of `researcher-prompt.md` as instructions
-- `$TICKET_ID`, `$TICKET_TITLE`, `$TICKET_DESCRIPTION` from Jira
-- `$RESEARCH_BASE` path
-- `$REPO_ROOT` path (the worktree path)
-- `$MODE` — researcher uses this to apply the correct budget limits
-
-The researcher writes to `$RESEARCH_BASE/tickets/$TICKET_ID/findings.md`. It signals completion by writing `<!-- status: ready -->` as the last line.
-
-### Consuming research before the first commit
-
-Before writing any code, check if research is ready:
+## Phase 1: Worktree Setup
 
 ```bash
-tail -1 "$RESEARCH_BASE/tickets/$TICKET_ID/findings.md" 2>/dev/null
+WORKTREES_ROOT="$REPO_PARENT/zipline-app-wt"
 ```
 
-- If output is `<!-- status: ready -->`: read `findings.md` and incorporate context into your approach. Add a `## Research` section to `TICKET_CONTEXT.md` pointing to the findings path.
-- If not ready yet: note "Research still running — will incorporate before first commit." Check again before the first `git commit`.
-- If still not ready before first commit: proceed and check again before Phase 3.
+By the time plan is approved, the worktree should already be ready (it was started in background during Phase 0.7). Verify:
 
-Do not block the user waiting for research. Work in parallel.
+```bash
+git worktree list --porcelain | grep "$WORKTREES_ROOT/zip-XXXX"
+```
 
----
+If not ready yet, wait for it to complete. Then create `TICKET_CONTEXT.md` in the worktree root with the approved plan as its content.
+
+Tell the user: "Worktree ready at `zipline-app-wt/zip-XXXX-<slug>`. Starting ZIP-XXXX."
 
 ### Worktree path convention
 
-After setup, all file reads/writes and git commands use `$WORKTREE_PATH`:
+All file reads/writes and git commands use `$WORKTREE_PATH`:
 - Files: `$WORKTREE_PATH/app/models/user.rb`
 - Git: `git -C "$WORKTREE_PATH" <command>`
 
@@ -298,18 +345,20 @@ When invoked as `/dev` with no argument:
 ## Status: planning | implementing | testing | reviewing | ready-to-push | done
 ## Branch: <branch-name>
 ## Worktree: ../zipline-app-wt/<slug>
+## Mode: fast | standard | full
 
-## Checklist
-- [ ] item
-- [ ] item
+## Plan
+<paste approved plan from Phase 0.7 here>
 
 ## Research
-Status: pending | ready | not-started
 Path: ../zipline-research/tickets/ZIP-XXXX/findings.md
-Key findings: —
+
+## Checklist
+- [ ] item  ← copied from plan and updated as work progresses
+- [ ] item
 
 ## Decisions
-- <decision and rationale>
+- <decision and rationale made during build, beyond the plan>
 
 ## Last Tester Run
 Status: pending | PASS | FAIL
