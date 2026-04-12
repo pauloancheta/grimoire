@@ -31,6 +31,7 @@ When the user is explicitly researching or planning — skip all gates. Just ans
 REPO_ROOT=$(git rev-parse --show-toplevel)
 REPO_PARENT=$(dirname "$REPO_ROOT")
 WORKTREES_ROOT="$REPO_PARENT/zipline-app-wt"
+RESEARCH_BASE="$REPO_PARENT/zipline-research"
 ```
 
 ### Check if worktree exists
@@ -52,9 +53,12 @@ git worktree list --porcelain | grep "$WORKTREES_ROOT/zip-XXXX"
    git worktree add "$WORKTREES_ROOT/zip-XXXX-<slug>" -b "<branch-name>"
    ```
 4. Create `TICKET_CONTEXT.md` in the worktree root (see format below).
-5. Tell the user: "Worktree ready at `zipline-app-wt/zip-XXXX-<slug>`. Starting ZIP-XXXX."
+5. Spawn the Researcher in the background (see Phase 1.5 below).
+6. Tell the user: "Worktree ready at `zipline-app-wt/zip-XXXX-<slug>`. Researcher running in background. Starting ZIP-XXXX."
 
 ### Resuming an existing worktree
+
+When resuming, also spawn the Researcher in the background (Phase 1.5). It will pick up any new domain knowledge written since the last session and append findings.
 
 1. Find the path: `git worktree list --porcelain | grep -A1 "zip-XXXX"`
 2. Read `$WORKTREE_PATH/TICKET_CONTEXT.md`
@@ -66,6 +70,37 @@ git worktree list --porcelain | grep "$WORKTREES_ROOT/zip-XXXX"
    ```
 4. Present a one-paragraph summary:
    > "Resuming ZIP-XXXX. Status: [from context]. [N commits ahead of main]. Pending: [items from checklist]. [Any unresolved issues from last review]."
+
+---
+
+## Phase 1.5: Spawn Researcher (Background)
+
+Immediately after worktree setup (new or resumed), spawn the Researcher as a background agent.
+
+Read `.claude/skills/dev/researcher-prompt.md` and spawn an Agent with:
+- `run_in_background: true`
+- Full contents of `researcher-prompt.md` as instructions
+- `$TICKET_ID`, `$TICKET_TITLE`, `$TICKET_DESCRIPTION` from Jira
+- `$RESEARCH_BASE` path
+- `$REPO_ROOT` path (the worktree path)
+
+The researcher writes to `$RESEARCH_BASE/tickets/$TICKET_ID/findings.md`. It signals completion by writing `<!-- status: ready -->` as the last line.
+
+### Consuming research before the first commit
+
+Before writing any code, check if research is ready:
+
+```bash
+tail -1 "$RESEARCH_BASE/tickets/$TICKET_ID/findings.md" 2>/dev/null
+```
+
+- If output is `<!-- status: ready -->`: read `findings.md` and incorporate context into your approach. Add a `## Research` section to `TICKET_CONTEXT.md` pointing to the findings path.
+- If not ready yet: note "Research still running — will incorporate before first commit." Check again before the first `git commit`.
+- If still not ready before first commit: proceed and check again before Phase 3.
+
+Do not block the user waiting for research. Work in parallel.
+
+---
 
 ### Worktree path convention
 
@@ -165,6 +200,7 @@ git -C "$WORKTREE_PATH" push -u origin HEAD
 
 When invoked as `/dev` with no argument:
 - No worktree needed — work in the main repo directory.
+- Researcher is skipped (no ticket context to research).
 - Tester is skipped (memory files have no tests).
 - Reviewer still runs before push, checking only for obvious issues in `.md` files (broken links, missing required sections).
 
@@ -182,6 +218,11 @@ When invoked as `/dev` with no argument:
 ## Checklist
 - [ ] item
 - [ ] item
+
+## Research
+Status: pending | ready | not-started
+Path: ../zipline-research/tickets/ZIP-XXXX/findings.md
+Key findings: —
 
 ## Decisions
 - <decision and rationale>
