@@ -23,6 +23,49 @@ When the user is explicitly researching or planning — skip all gates. Just ans
 
 ---
 
+## Phase 0: Classify Ticket
+
+Before any setup, classify the ticket to determine the execution mode. Mode controls which phases run and at what budget.
+
+Fetch `$TICKET_TYPE`, `$TICKET_TITLE`, `$TICKET_DESCRIPTION` from Jira first.
+
+### Keyword counts
+
+**Domain keywords** — count how many appear in title + description:
+`elasticsearch`, `graphql`, `aws`, `heroku`, `search`, `deploy`, `infrastructure`, `redis`, `postgres`, `sidekiq`, `websocket`, `auth`, `billing`, `api`
+
+**Complexity keywords** — count how many appear in title + description:
+`performance`, `latency`, `upgrade`, `migration`, `timeout`, `scaling`, `N+1`, `security`, `refactor`, `rewrite`
+
+### Classification rules
+
+**FAST** — if ALL of:
+- Type is `Chore` or `Internal`
+- Zero complexity keywords in title
+- Estimated scope ≤ 2 files (inferred from description)
+
+**FULL** — if ANY of:
+- Type is `Feature`
+- 2+ domain keywords present
+- 1+ complexity keyword present
+
+**STANDARD** — everything else (bugs, isolated single-domain changes)
+
+### Mode behavior
+
+| | Fast | Standard | Full |
+|---|---|---|---|
+| Worktree | No | Yes | Yes |
+| Researcher | Skip | Reduced budget | Full budget |
+| Tester | Skip | Parallel with reviewer | Sequential first |
+| Reviewer | Yes (lightweight, no worktree) | Parallel with tester | Sequential after tester |
+
+Set `$MODE = fast | standard | full` and carry it through all phases.
+
+**Fast path:** skip Phases 1–2. Work directly in the main repo, commit. Go straight to Phase 3 (reviewer only, no tester).
+
+---
+
 ## Phase 1: Worktree Setup
 
 ### Compute paths
@@ -75,6 +118,8 @@ When resuming, also spawn the Researcher in the background (Phase 1.5). It will 
 
 ## Phase 1.5: Spawn Researcher (Background)
 
+Skip entirely if `$MODE = fast`.
+
 Immediately after worktree setup (new or resumed), spawn the Researcher as a background agent.
 
 Read `.claude/skills/dev/researcher-prompt.md` and spawn an Agent with:
@@ -83,6 +128,7 @@ Read `.claude/skills/dev/researcher-prompt.md` and spawn an Agent with:
 - `$TICKET_ID`, `$TICKET_TITLE`, `$TICKET_DESCRIPTION` from Jira
 - `$RESEARCH_BASE` path
 - `$REPO_ROOT` path (the worktree path)
+- `$MODE` — researcher uses this to apply the correct budget limits
 
 The researcher writes to `$RESEARCH_BASE/tickets/$TICKET_ID/findings.md`. It signals completion by writing `<!-- status: ready -->` as the last line.
 
@@ -128,46 +174,78 @@ git -C "$WORKTREE_PATH" commit -m "<atomic message>"
 
 ## Phase 3: Push Gate
 
-Fire before `git push` or `/create-pull-request`. Always runs tester first, then reviewer.
+Fire before `git push` or `/create-pull-request`. Behavior varies by `$MODE`.
 
-### A. Tester
+Collect the diff inputs once — reused by both agents:
+```bash
+DIFF=$(git -C "$WORKTREE_PATH" diff origin/main...HEAD)         # fast: git diff HEAD~1
+FILES=$(git -C "$WORKTREE_PATH" diff origin/main...HEAD --name-only)
+```
+
+---
+
+### FAST mode — reviewer only
+
+Spawn the Reviewer with the diff. No tester. No worktree path needed.
+
+Apply the same reviewer fix loop (see Full mode § Reviewer below).
+
+---
+
+### STANDARD mode — tester and reviewer in parallel
+
+Spawn both agents simultaneously:
+
+```
+Tester  ──────────────────┐
+                           ├── collect results
+Reviewer ─────────────────┘
+```
+
+**Happy path** (tester PASS, reviewer PASS/no criticals): fix any medium/low items the user selects, then push.
+
+**Tester FAIL:** fix failures, commit, re-run tester (up to 3 runs). Once tester passes, re-run reviewer on the updated diff before pushing.
+
+**Reviewer BLOCK:** fix criticals, commit, re-run reviewer (up to 3 runs). Tester does not need to re-run.
+
+---
+
+### FULL mode — sequential (tester first, then reviewer)
+
+#### A. Tester
 
 Read `.claude/skills/dev/tester-prompt.md`. Spawn an Agent with:
 - Full contents of `tester-prompt.md` as instructions
-- Output of `git -C "$WORKTREE_PATH" diff origin/main...HEAD`
-- Output of `git -C "$WORKTREE_PATH" diff origin/main...HEAD --name-only`
+- `$DIFF`, `$FILES`
 - `$WORKTREE_PATH` so it can run commands
 
 The tester returns structured JSON (see `tester-prompt.md` for schema).
 
 **If `verdict` is FAIL:**
 1. Fix each failure — no user prompt, just fix it.
-2. Commit fixes: `git -C "$WORKTREE_PATH" commit -m "fix: resolve test failures"`
-3. Re-run tester.
-4. Repeat up to **3 total tester runs**.
-5. If still failing after 3 runs, halt:
+2. Commit: `git -C "$WORKTREE_PATH" commit -m "fix: resolve test failures"`
+3. Re-run tester. Repeat up to **3 total runs**.
+4. If still failing after 3 runs, halt:
    > "After 3 attempts, these test failures remain. Please review before I push:"
-   > [list each failure with test name and error]
+   > [list failures]
 
 Update `TICKET_CONTEXT.md` with the tester result before moving on.
 
-### B. Reviewer
+#### B. Reviewer
 
 Read `.claude/skills/dev/reviewer-prompt.md`. Spawn an Agent with:
 - Full contents of `reviewer-prompt.md` as instructions
-- Output of `git -C "$WORKTREE_PATH" diff origin/main...HEAD`
-- Output of `git -C "$WORKTREE_PATH" diff origin/main...HEAD --name-only`
+- Current `$DIFF`, `$FILES` (re-collect if tester made fixes)
 
 The reviewer returns structured JSON (see `reviewer-prompt.md` for schema).
 
 **If `critical` is non-empty:**
 1. Fix every critical issue — no user prompt.
 2. Commit: `git -C "$WORKTREE_PATH" commit -m "fix: address critical review issues"`
-3. Re-run reviewer.
-4. Repeat up to **3 total reviewer runs**.
-5. If critical issues persist after 3 runs, halt:
+3. Re-run reviewer. Repeat up to **3 total runs**.
+4. If critical issues persist after 3 runs, halt:
    > "After 3 fix attempts, these critical issues remain. Please review before I push:"
-   > [list each issue with file, line, description]
+   > [list issues with file, line, description]
 
 **If `medium` or `low` is non-empty** (after criticals are clear), show:
 
@@ -184,14 +262,20 @@ Reviewer done. Remaining issues:
 Fix all, some (by number), or skip? (all / 1 2 / skip)
 ```
 
-Wait for response. Fix the selected items, commit them, then continue.
+Wait for response. Fix selected items, commit, then continue.
 
-Update `TICKET_CONTEXT.md` with the reviewer result and any resolved issues.
+Update `TICKET_CONTEXT.md` with the reviewer result and resolved issues.
+
+---
 
 ### C. Push
 
 ```bash
+# worktree (standard / full)
 git -C "$WORKTREE_PATH" push -u origin HEAD
+
+# fast (main repo)
+git push -u origin HEAD
 ```
 
 ---

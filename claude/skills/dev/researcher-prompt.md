@@ -16,6 +16,19 @@ You produce two outputs:
 - `$TICKET_DESCRIPTION` — from Jira
 - `$RESEARCH_BASE` — absolute path to the research base folder (e.g. `../zipline-research`)
 - `$REPO_ROOT` — absolute path to the repo worktree
+- `$MODE` — `standard` or `full` (fast mode never spawns the researcher)
+
+### Budget by mode
+
+| Limit | Standard | Full |
+|---|---|---|
+| BFS max depth | 2 hops | 4 hops |
+| Max domains read in full | 4 | 8 |
+| Web research | Only for critical gaps | All gaps |
+| Max queries per gap | 1 | 3 |
+| Max pages per query | 1 | 2 |
+
+A **critical gap** is one where the answer directly changes the implementation approach (e.g. "is this API endpoint idempotent?"). Skip web research for informational gaps in standard mode.
 
 ---
 
@@ -150,6 +163,55 @@ If a finding belongs to a domain that doesn't exist yet:
 
 ### New domain creation rule
 Only create a new domain if no existing domain covers more than 60% of the topic. When in doubt, append to an existing domain rather than fragment.
+
+---
+
+## Phase 5.5: Compaction
+
+After all write-backs in Phase 5, check every domain file that was modified for size.
+
+### Size check
+
+```bash
+wc -c < "$RESEARCH_BASE/domains/<name>/<file>.md"
+```
+
+A file exceeding **12,000 characters** (~3k tokens) needs compaction. `summary.md` is exempt — it must stay under 1,000 characters always; rewrite it if it drifts over.
+
+### Compaction procedure
+
+For each oversized file:
+
+1. **Identify per-ticket sections** — headings matching `## ZIP-\w+ — \d{4}-\d{2}-\d{2}`
+2. **Separate** the 3 most recent ticket sections (keep intact) from older ones (compact)
+3. **Summarize older sections** — extract the lasting insights as bullet points, stripping ticket-specific prose:
+   ```markdown
+   ## Historical Patterns (compacted YYYY-MM-DD)
+   - <insight> (ZIP-XXXX, ZIP-YYYY)
+   - <insight> (ZIP-ZZZZ)
+   ```
+4. **Archive the full old sections** — append them verbatim to `domains/<name>/archive/YYYY-MM.md` (create if needed). Never delete original content.
+5. **Rewrite the domain file** — replace the old per-ticket sections with the compact summary. Keep all structural sections (overview, patterns, known-issues) untouched.
+
+### What counts as a lasting insight
+
+Keep if it is actionable in future tickets:
+- A constraint ("ALB timeout is global, not per-target-group")
+- A pattern ("search resolver skips dataloader — known, unfixed")
+- A gotcha ("acts_as_paranoid models need `.with_deleted` in admin queries")
+
+Discard if it is only narrative:
+- "In this ticket we changed X to Y"
+- "We decided to defer this"
+
+### After compaction
+
+Re-check the file size. If still over 12,000 characters, compact again targeting the next 3 oldest sections. Repeat until under limit.
+
+Log each compaction in `research-log.md` under a `## Compactions` section:
+```
+- domains/elasticsearch/known-issues.md compacted YYYY-MM-DD: 8 sections → 2 sections + archive/2026-01.md
+```
 
 ---
 
@@ -293,3 +355,7 @@ search → api, elasticsearch
 - Every rejected source must be logged with a reason.
 - Every pruned branch must appear as a `[^pN]` footnote.
 - The last line of `findings.md` must be `<!-- status: ready -->`.
+- Respect the budget limits for `$MODE` — do not run full-budget research in standard mode.
+- Never delete domain content — compact to archive, not to trash.
+- `summary.md` must stay under 1,000 characters. Rewrite it if it grows.
+- Log every compaction in `research-log.md`.
