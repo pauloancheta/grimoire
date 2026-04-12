@@ -27,29 +27,59 @@ When the user is explicitly researching or planning — skip all gates. Just ans
 
 Before any setup, classify the ticket to determine the execution mode. Mode controls which phases run and at what budget.
 
-Fetch `$TICKET_TYPE`, `$TICKET_TITLE`, `$TICKET_DESCRIPTION` from Jira first.
+### Step 1 — Read the full ticket
 
-### Keyword counts
+Fetch from Jira via Atlassian MCP:
+- `$TICKET_TITLE`
+- `$TICKET_DESCRIPTION` (full body, not a summary)
+- `$TICKET_ACCEPTANCE_CRITERIA` if present
+- `$TICKET_LINKED` — count of linked/blocking tickets
 
-**Domain keywords** — count how many appear in title + description:
-`elasticsearch`, `graphql`, `aws`, `heroku`, `search`, `deploy`, `infrastructure`, `redis`, `postgres`, `sidekiq`, `websocket`, `auth`, `billing`, `api`
+### Step 2 — Codebase probe
 
-**Complexity keywords** — count how many appear in title + description:
-`performance`, `latency`, `upgrade`, `migration`, `timeout`, `scaling`, `N+1`, `security`, `refactor`, `rewrite`
+Extract concrete nouns from the ticket: class names, service names, feature names, file paths, method names, table names. Grep the codebase for each:
 
-### Classification rules
+```bash
+grep -r "<term>" "$REPO_ROOT" --include="*.rb" --include="*.ts" --include="*.tsx" -l 2>/dev/null
+```
 
-**FAST** — if ALL of:
-- Type is `Chore` or `Internal`
-- Zero complexity keywords in title
-- Estimated scope ≤ 2 files (inferred from description)
+Collect the union of all matching files. Note which domains they appear to live in (inferred from path: `app/graphql/`, `app/services/`, `config/`, etc.).
 
-**FULL** — if ANY of:
-- Type is `Feature`
-- 2+ domain keywords present
-- 1+ complexity keyword present
+Run all greps in parallel. Cap at 10 terms — pick the most specific nouns first.
 
-**STANDARD** — everything else (bugs, isolated single-domain changes)
+### Step 3 — Judgment call
+
+With the ticket content and probe results, reason through:
+
+- **File count**: how many unique files did the probe surface? (proxy for blast radius)
+- **Domain spread**: do the files span 1 domain or multiple?
+- **Root cause depth**: does the description suggest a surface fix (wrong label, copy change) or a systemic one (timeout, data model, auth flow)?
+- **Linked tickets**: 3+ linked tickets suggests broader impact
+
+Classify as:
+
+**FAST** — surface change, ≤ 2 files, single domain, no systemic root cause
+> Examples: wrong label, missing translation, config value tweak, copy change
+
+**FULL** — any of: 5+ files probed, 2+ domains, systemic root cause, 3+ linked tickets
+> Examples: performance fix, auth flow change, schema migration, cross-service integration
+
+**STANDARD** — everything else
+
+### Step 4 — Show classification and confirm
+
+Always show the classification before proceeding:
+
+```
+Classification: standard
+Rationale: Bug in search pagination — probe found SearchController,
+SearchService, and 2 view files (4 files, single domain). Isolated fix,
+no infrastructure signals.
+
+Override? (fast / standard / full)  or press enter to accept
+```
+
+Wait for response. Accept the user's override if given. Set `$MODE` and proceed.
 
 ### Mode behavior
 
