@@ -23,7 +23,7 @@ When the user is explicitly researching or planning — skip all gates. Just ans
 
 ---
 
-## Phase 0: Classify Ticket
+## Phase 1: Classify Ticket
 
 Before any setup, classify the ticket to determine the execution mode. Mode controls which phases run and at what budget.
 
@@ -95,7 +95,7 @@ Set `$MODE = fast | standard | full` and carry it through all phases.
 
 ---
 
-## Phase 0.5: Researcher (Foreground)
+## Phase 2: Researcher (Foreground)
 
 Skip if `$MODE = fast`.
 
@@ -117,14 +117,14 @@ Wait for the researcher to complete and write `<!-- status: ready -->` to `findi
 
 ---
 
-## Phase 0.7: Plan Mode
+## Phase 3: Plan Mode
 
 ### Fast mode — one-line confirm
 
 State exactly what you will do and where:
 > "Going to [change] in [file]. Proceed?"
 
-Wait for confirmation. On yes, go directly to Phase 2 (no worktree).
+Wait for confirmation. On yes, go directly to Phase 5 (no worktree).
 
 ---
 
@@ -195,7 +195,7 @@ On approval, exit plan mode (`ExitPlanMode` tool). Write the approved plan into 
 
 ### Resuming a ticket
 
-If `TICKET_CONTEXT.md` already has a `## Plan` section, skip Phase 0.5 and 0.7. Instead:
+If `TICKET_CONTEXT.md` already has a `## Plan` section, skip Phase 2 and 3. Instead:
 
 1. Read `TICKET_CONTEXT.md`
 2. Run git status in parallel:
@@ -209,13 +209,13 @@ If `TICKET_CONTEXT.md` already has a `## Plan` section, skip Phase 0.5 and 0.7. 
 
 ---
 
-## Phase 1: Worktree Setup
+## Phase 4: Worktree Setup
 
 ```bash
 WORKTREES_ROOT="$REPO_PARENT/zipline-app-wt"
 ```
 
-By the time plan is approved, the worktree should already be ready (it was started in background during Phase 0.7). Verify:
+By the time plan is approved, the worktree should already be ready (it was started in background during Phase 3). Verify:
 
 ```bash
 git worktree list --porcelain | grep "$WORKTREES_ROOT/zip-XXXX"
@@ -233,7 +233,7 @@ All file reads/writes and git commands use `$WORKTREE_PATH`:
 
 ---
 
-## Phase 2: Build
+## Phase 5: Build
 
 Implement what the user asks. Commit frequently — commits are local, fast, and have no gate.
 
@@ -249,7 +249,7 @@ git -C "$WORKTREE_PATH" commit -m "<atomic message>"
 
 ---
 
-## Phase 3: Push Gate
+## Phase 6: Push Gate
 
 Fire before `git push` or `/create-pull-request`. Behavior varies by `$MODE`.
 
@@ -378,7 +378,7 @@ When invoked as `/dev` with no argument:
 ## Mode: fast | standard | full
 
 ## Plan
-<paste approved plan from Phase 0.7 here>
+<paste approved plan from Phase 3 here>
 
 ## Research
 Path: ../zipline-research/tickets/ZIP-XXXX/findings.md
