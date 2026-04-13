@@ -345,7 +345,7 @@ Update `TICKET_CONTEXT.md` with the reviewer result and resolved issues.
 
 ---
 
-### C. Push
+### C. Push and PR
 
 ```bash
 # worktree (standard / full)
@@ -354,6 +354,8 @@ git -C "$WORKTREE_PATH" push -u origin HEAD
 # fast (main repo)
 git push -u origin HEAD
 ```
+
+After pushing, invoke the `/create-pull-request` skill **without** `--ready`. PRs opened from `/dev` are always draft — never pass `--ready` unless the user explicitly requests it.
 
 ---
 
