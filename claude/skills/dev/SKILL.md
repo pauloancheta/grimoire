@@ -106,7 +106,7 @@ REPO_PARENT=$(dirname "$REPO_ROOT")
 RESEARCH_BASE="$REPO_PARENT/zipline-research"
 ```
 
-Read `.claude/skills/dev/researcher-prompt.md` and spawn an Agent **synchronously** (no `run_in_background`) with:
+Read `~/.claude/skills/dev/researcher-prompt.md` and spawn an Agent **synchronously** (no `run_in_background`) with:
 - Full contents of `researcher-prompt.md` as instructions
 - `$TICKET_ID`, `$TICKET_TITLE`, `$TICKET_DESCRIPTION` from Jira
 - `$RESEARCH_BASE` path
@@ -141,7 +141,7 @@ Enter plan mode (use the `EnterPlanMode` tool). In plan mode:
    - Slug: lowercase title, spaces to hyphens, max 5 words
 4. **Start worktree creation in background** while you write the plan:
    ```bash
-   git worktree add "$WORKTREES_ROOT/zip-XXXX-<slug>" -b "<branch-name>" &
+   (cd "$REPO_ROOT" && bin/wt new "<branch-name>" >/dev/null 2>&1) &
    ```
 5. Write and present the plan to the user (format below by mode)
 6. Wait for user approval or edits
@@ -211,19 +211,15 @@ If `TICKET_CONTEXT.md` already has a `## Plan` section, skip Phase 2 and 3. Inst
 
 ## Phase 4: Worktree Setup
 
-```bash
-WORKTREES_ROOT="$REPO_PARENT/zipline-app-wt"
-```
-
-By the time plan is approved, the worktree should already be ready (it was started in background during Phase 3). Verify:
+By the time plan is approved, the worktree should already be ready (it was started in background during Phase 3). Get the path — `bin/wt new` is idempotent and returns the existing path if the branch already has a worktree:
 
 ```bash
-git worktree list --porcelain | grep "$WORKTREES_ROOT/zip-XXXX"
+WORKTREE_PATH=$(cd "$REPO_ROOT" && bin/wt new "<branch-name>")
 ```
 
-If not ready yet, wait for it to complete. Then create `TICKET_CONTEXT.md` in the worktree root with the approved plan as its content.
+Then create `TICKET_CONTEXT.md` in the worktree root with the approved plan as its content.
 
-Tell the user: "Worktree ready at `zipline-app-wt/zip-XXXX-<slug>`. Starting ZIP-XXXX."
+Tell the user: "Worktree ready at `<WORKTREE_PATH>`. Starting ZIP-XXXX."
 
 ### Worktree path convention
 
@@ -291,7 +287,7 @@ Reviewer ─────────────────┘
 
 #### A. Tester
 
-Read `.claude/skills/dev/tester-prompt.md`. Spawn an Agent with:
+Read `~/.claude/skills/dev/tester-prompt.md`. Spawn an Agent with:
 - Full contents of `tester-prompt.md` as instructions
 - `$DIFF`, `$FILES`
 - `$WORKTREE_PATH` so it can run commands
@@ -310,7 +306,7 @@ Update `TICKET_CONTEXT.md` with the tester result before moving on.
 
 #### B. Reviewer
 
-Read `.claude/skills/dev/reviewer-prompt.md`. Spawn an Agent with:
+Read `~/.claude/skills/dev/reviewer-prompt.md`. Spawn an Agent with:
 - Full contents of `reviewer-prompt.md` as instructions
 - Current `$DIFF`, `$FILES` (re-collect if tester made fixes)
 
@@ -376,7 +372,7 @@ When invoked as `/dev` with no argument:
 
 ## Status: planning | implementing | testing | reviewing | ready-to-push | done
 ## Branch: <branch-name>
-## Worktree: ../zipline-app-wt/<slug>
+## Worktree: <absolute path from bin/wt>
 ## Mode: fast | standard | full
 
 ## Plan
